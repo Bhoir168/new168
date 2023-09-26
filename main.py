@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template_string, request
 from kite_trade import *
 import logging
 import time
@@ -8,11 +8,43 @@ app = Flask(__name__)
 # Initialize the Kite API
 kite = None  # We will initialize it later with user credentials
 
+# Define the HTML template as a string
+html_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trading App</title>
+</head>
+<body>
+    <h1>Trading App</h1>
+
+    <form method="post" action="/trade">
+        <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="twofa">2FA or PIN:</label>
+        <input type="text" id="twofa" name="twofa" required><br><br>
+
+        <label for="symbol">Trading Symbol:</label>
+        <input type="text" id="symbol" name="symbol" value="ADANIGREEN" required><br><br>
+
+        <label for="limit_price">Limit Price:</label>
+        <input type="number" step="0.01" id="limit_price" name="limit_price" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+"""
+
 
 # Define the route for the homepage
 @app.route('/')
 def home():
-    return render_template('index.html')  # Create an HTML template for the homepage
+    return render_template_string(html_template)
 
 
 # Define the trading logic route
